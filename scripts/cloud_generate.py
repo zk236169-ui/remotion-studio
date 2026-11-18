@@ -1,6 +1,6 @@
-import os, sys, json, time, subprocess, urllib.request, urllib.parse
+﻿import os, sys, json, time, subprocess, urllib.request, urllib.parse
 
-prompt = sys.argv[1].strip() if len(sys.argv) > 1 and sys.argv[1].strip() else "كيف تختار دهان يعيش سنين بدون تقشير"
+prompt = sys.argv[1].strip() if len(sys.argv) > 1 and sys.argv[1].strip() else "ÙƒÙŠÙ ØªØ®ØªØ§Ø± Ø¯Ù‡Ø§Ù† ÙŠØ¹ÙŠØ´ Ø³Ù†ÙŠÙ† Ø¨Ø¯ÙˆÙ† ØªÙ‚Ø´ÙŠØ±"
 groq_key = os.environ.get("GROQ_API_KEY", "").strip()
 pixabay_key = os.environ.get("PIXABAY_API_KEY", "").strip()
 
@@ -32,7 +32,7 @@ scenes_data = None
 if groq_key:
     try:
         sys_msg = (
-            "You are an elite Saudi TikTok/Reels viral ad director for a paint store in Riyadh called محل خيبر الدهانات "
+            "You are an elite Saudi TikTok/Reels viral ad director for a paint store in Riyadh called Ù…Ø­Ù„ Ø®ÙŠØ¨Ø± Ø§Ù„Ø¯Ù‡Ø§Ù†Ø§Øª "
             "(selling Jotun, 777, National paints - NEVER mention Dulux). "
             "Write a fast, punchy, exciting 8-scene viral Reel script in natural spoken Saudi dialect (NOT boring professor talk). "
             "Each scene is 3 seconds (~8 to 11 Arabic words max). "
@@ -70,14 +70,14 @@ if groq_key:
 
 if not scenes_data:
     scenes_data = [
-        {"tag": "وقف شوي!", "headline": prompt[:26], "spoken": f"{prompt}! لا تصبغ بيتك قبل ما تشوف هالسر!", "video_query": "painting wall", "accent": "#EF4444"},
-        {"tag": "أكبر غلطة", "headline": "البوية الرخيصة تتقشر!", "spoken": "أغلب الناس يخسرون فلوسهم على بوية تتقشر بعد شهور!", "video_query": "peeling paint", "accent": "#F59E0B"},
-        {"tag": "السر هنا", "headline": "برايمر أصلي يمسك الجدار", "spoken": "السر إنك تأسس ببرايمر قوي يقفل المسام صح!", "video_query": "paint brush", "accent": "#10B981"},
-        {"tag": "دقة 100%", "headline": "خلط ألوان بالكمبيوتر", "spoken": "وبالكمبيوتر نخلط لك نفس الدرجة اللي في بالك بالضبط!", "video_query": "color mixing", "accent": "#38BDF8"},
-        {"tag": "فخامة", "headline": "ألوان توسع المكان", "spoken": "شوف كيف الدرجات الهادية تقلب الصالة قصر!", "video_query": "living room", "accent": "#A855F7"},
-        {"tag": "ضد الشمس", "headline": "حماية من حر الرياض", "spoken": "وللواجهات عندنا عوازل تتحمل شمس الرياض خمسين درجة!", "video_query": "modern house", "accent": "#F59E0B"},
-        {"tag": "توفير", "headline": "نحسب الكمية مجاناً", "spoken": "عطني مقاسات غرفتك ونحسب لك الكمية بدون زيادة ريال!", "video_query": "home renovation", "accent": "#10B981"},
-        {"tag": "الأصلي", "headline": "جوتن • 777 • ناشونال", "spoken": "كل دهانات جوتن وسبعمية وسبعة وسبعين وناشونال الأصلية عندنا!", "video_query": "paint roller", "accent": "#38BDF8"},
+        {"tag": "ÙˆÙ‚Ù Ø´ÙˆÙŠ!", "headline": prompt[:26], "spoken": f"{prompt}! Ù„Ø§ ØªØµØ¨Øº Ø¨ÙŠØªÙƒ Ù‚Ø¨Ù„ Ù…Ø§ ØªØ´ÙˆÙ Ù‡Ø§Ù„Ø³Ø±!", "video_query": "painting wall", "accent": "#EF4444"},
+        {"tag": "Ø£ÙƒØ¨Ø± ØºÙ„Ø·Ø©", "headline": "Ø§Ù„Ø¨ÙˆÙŠØ© Ø§Ù„Ø±Ø®ÙŠØµØ© ØªØªÙ‚Ø´Ø±!", "spoken": "Ø£ØºÙ„Ø¨ Ø§Ù„Ù†Ø§Ø³ ÙŠØ®Ø³Ø±ÙˆÙ† ÙÙ„ÙˆØ³Ù‡Ù… Ø¹Ù„Ù‰ Ø¨ÙˆÙŠØ© ØªØªÙ‚Ø´Ø± Ø¨Ø¹Ø¯ Ø´Ù‡ÙˆØ±!", "video_query": "peeling paint", "accent": "#F59E0B"},
+        {"tag": "Ø§Ù„Ø³Ø± Ù‡Ù†Ø§", "headline": "Ø¨Ø±Ø§ÙŠÙ…Ø± Ø£ØµÙ„ÙŠ ÙŠÙ…Ø³Ùƒ Ø§Ù„Ø¬Ø¯Ø§Ø±", "spoken": "Ø§Ù„Ø³Ø± Ø¥Ù†Ùƒ ØªØ£Ø³Ø³ Ø¨Ø¨Ø±Ø§ÙŠÙ…Ø± Ù‚ÙˆÙŠ ÙŠÙ‚ÙÙ„ Ø§Ù„Ù…Ø³Ø§Ù… ØµØ­!", "video_query": "paint brush", "accent": "#10B981"},
+        {"tag": "Ø¯Ù‚Ø© 100%", "headline": "Ø®Ù„Ø· Ø£Ù„ÙˆØ§Ù† Ø¨Ø§Ù„ÙƒÙ…Ø¨ÙŠÙˆØªØ±", "spoken": "ÙˆØ¨Ø§Ù„ÙƒÙ…Ø¨ÙŠÙˆØªØ± Ù†Ø®Ù„Ø· Ù„Ùƒ Ù†ÙØ³ Ø§Ù„Ø¯Ø±Ø¬Ø© Ø§Ù„Ù„ÙŠ ÙÙŠ Ø¨Ø§Ù„Ùƒ Ø¨Ø§Ù„Ø¶Ø¨Ø·!", "video_query": "color mixing", "accent": "#38BDF8"},
+        {"tag": "ÙØ®Ø§Ù…Ø©", "headline": "Ø£Ù„ÙˆØ§Ù† ØªÙˆØ³Ø¹ Ø§Ù„Ù…ÙƒØ§Ù†", "spoken": "Ø´ÙˆÙ ÙƒÙŠÙ Ø§Ù„Ø¯Ø±Ø¬Ø§Øª Ø§Ù„Ù‡Ø§Ø¯ÙŠØ© ØªÙ‚Ù„Ø¨ Ø§Ù„ØµØ§Ù„Ø© Ù‚ØµØ±!", "video_query": "living room", "accent": "#A855F7"},
+        {"tag": "Ø¶Ø¯ Ø§Ù„Ø´Ù…Ø³", "headline": "Ø­Ù…Ø§ÙŠØ© Ù…Ù† Ø­Ø± Ø§Ù„Ø±ÙŠØ§Ø¶", "spoken": "ÙˆÙ„Ù„ÙˆØ§Ø¬Ù‡Ø§Øª Ø¹Ù†Ø¯Ù†Ø§ Ø¹ÙˆØ§Ø²Ù„ ØªØªØ­Ù…Ù„ Ø´Ù…Ø³ Ø§Ù„Ø±ÙŠØ§Ø¶ Ø®Ù…Ø³ÙŠÙ† Ø¯Ø±Ø¬Ø©!", "video_query": "modern house", "accent": "#F59E0B"},
+        {"tag": "ØªÙˆÙÙŠØ±", "headline": "Ù†Ø­Ø³Ø¨ Ø§Ù„ÙƒÙ…ÙŠØ© Ù…Ø¬Ø§Ù†Ø§Ù‹", "spoken": "Ø¹Ø·Ù†ÙŠ Ù…Ù‚Ø§Ø³Ø§Øª ØºØ±ÙØªÙƒ ÙˆÙ†Ø­Ø³Ø¨ Ù„Ùƒ Ø§Ù„ÙƒÙ…ÙŠØ© Ø¨Ø¯ÙˆÙ† Ø²ÙŠØ§Ø¯Ø© Ø±ÙŠØ§Ù„!", "video_query": "home renovation", "accent": "#10B981"},
+        {"tag": "Ø§Ù„Ø£ØµÙ„ÙŠ", "headline": "Ø¬ÙˆØªÙ† â€¢ 777 â€¢ Ù†Ø§Ø´ÙˆÙ†Ø§Ù„", "spoken": "ÙƒÙ„ Ø¯Ù‡Ø§Ù†Ø§Øª Ø¬ÙˆØªÙ† ÙˆØ³Ø¨Ø¹Ù…ÙŠØ© ÙˆØ³Ø¨Ø¹Ø© ÙˆØ³Ø¨Ø¹ÙŠÙ† ÙˆÙ†Ø§Ø´ÙˆÙ†Ø§Ù„ Ø§Ù„Ø£ØµÙ„ÙŠØ© Ø¹Ù†Ø¯Ù†Ø§!", "video_query": "paint roller", "accent": "#38BDF8"},
     ]
 
 # 2. Fetch REAL MOVING HD Videos from Pixabay API for each scene
@@ -115,14 +115,14 @@ for idx, sc in enumerate(scenes_data, 1):
         subprocess.run([
             "ffmpeg", "-y", "-ss", "0.5", "-t", "3.2", "-i", raw_vid,
             "-an", "-vf", "scale=1080:1344:force_original_aspect_ratio=increase,crop=1080:1344,eq=contrast=1.08:saturation=1.18,fps=60",
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", clip_out
+            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", clip_out
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
     else:
         c_hex = sc.get("accent", "#38BDF8").replace("#", "0x")
         subprocess.run([
             "ffmpeg", "-y", "-f", "lavfi",
             "-i", f"color=c={c_hex}:s=1080x1344:d=3.2:r=60",
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", clip_out
+            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18", clip_out
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 # 3. Synthesize energetic Saudi voiceover per scene & mix subtle groove
@@ -131,9 +131,9 @@ total_frames = 0
 
 all_steps = scenes_data + [{
     "isShopEnd": True,
-    "tag": "زورونا اليوم!",
+    "tag": "Ø²ÙˆØ±ÙˆÙ†Ø§ Ø§Ù„ÙŠÙˆÙ…!",
     "headline": SHOP_NAME,
-    "spoken": "حياكم الله في محل خيبر الدهانات بالرياض، راسلنا واتساب الحين على صفر خمسة تسعة تسعة أربعة ثمانية أربعة صفر ستة ثمانية!",
+    "spoken": "Ø­ÙŠØ§ÙƒÙ… Ø§Ù„Ù„Ù‡ ÙÙŠ Ù…Ø­Ù„ Ø®ÙŠØ¨Ø± Ø§Ù„Ø¯Ù‡Ø§Ù†Ø§Øª Ø¨Ø§Ù„Ø±ÙŠØ§Ø¶ØŒ Ø±Ø§Ø³Ù„Ù†Ø§ ÙˆØ§ØªØ³Ø§Ø¨ Ø§Ù„Ø­ÙŠÙ† Ø¹Ù„Ù‰ ØµÙØ± Ø®Ù…Ø³Ø© ØªØ³Ø¹Ø© ØªØ³Ø¹Ø© Ø£Ø±Ø¨Ø¹Ø© Ø«Ù…Ø§Ù†ÙŠØ© Ø£Ø±Ø¨Ø¹Ø© ØµÙØ± Ø³ØªØ© Ø«Ù…Ø§Ù†ÙŠØ©!",
     "accent": "#22C55E"
 }]
 

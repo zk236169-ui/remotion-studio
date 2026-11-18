@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - uses: actions/setup-python@v5
         with:
@@ -33,7 +34,7 @@ jobs:
           pip install edge-tts
 
       - name: Install Node packages
-        run: npm install
+        run: npm ci
 
       - name: Generate AI Script, Moving Clips & Render 60fps Video
         env:
