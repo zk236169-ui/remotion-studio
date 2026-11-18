@@ -11,8 +11,8 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="PaintWhiteboard9x16"
         component={PaintWhiteboard9x16}
-        durationInFrames={wbData.totalFrames || 3600}
-        fps={60}
+        durationInFrames={wbData.totalFrames || 1800}
+        fps={30}
         width={1080}
         height={1920}
       />

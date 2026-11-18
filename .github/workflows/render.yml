@@ -4,13 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       prompt:
-        description: 'Video prompt / hook topic'
+        description: 'Video prompt or "create a video"'
         required: true
-        default: 'كيف تختار دهان يعيش سنين بدون تقشير'
+        default: 'create a video'
       chat_id:
         description: 'Telegram Chat ID to send video to'
         required: false
         default: ''
+
+permissions:
+  contents: write
 
 jobs:
   render-and-send:
@@ -36,11 +39,18 @@ jobs:
       - name: Install Node packages
         run: npm ci
 
-      - name: Generate AI Script, Moving Clips & Render 60fps Video
+      - name: Generate AI Script, Scene-Matched Visuals & Render 60s Video
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python3 scripts/cloud_generate.py "${{ github.event.inputs.prompt }}"
+
+      - name: Save Topic Rotation History (Never Repeat)
+        if: success()
+        run: |
+          git config user.name "Khyber Bot"
+          git config user.email "bot@khyberpaints.local"
+          git add scripts/used_topics.json
+          git diff --staged --quiet || (git commit -m "Track used topic" && git push)
 
       - name: Send Finished Video Directly to Telegram
         if: success()
@@ -49,7 +59,7 @@ jobs:
           if [ -z "$TARGET_CHAT" ]; then TARGET_CHAT="${{ secrets.TELEGRAM_CHAT_ID }}"; fi
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendVideo" \
             -F chat_id="$TARGET_CHAT" \
-            -F caption="جاهز! الموضوع: ${{ github.event.inputs.prompt }}" \
+            -F caption="جاهز! فيديو جديد لقناة محل خيبر للدهانات (الرياض)" \
             -F video=@"out/final_telegram_video.mp4"
 
       - name: Notify Telegram on Failure
