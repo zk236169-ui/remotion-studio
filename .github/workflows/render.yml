@@ -45,11 +45,10 @@ jobs:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python3 scripts/cloud_generate.py "${{ github.event.inputs.prompt }}"
 
-      - name: Save Topic Rotation History (Never Repeat)
-        - name: Save Topic Rotation History
-          if: success()
-          run: |
-            git config user.name "Khyber Bot"
+      - name: Save Topic Rotation History
+        if: success()
+        run: |
+          git config user.name "Khyber Bot"
           git config user.email "bot@khyberpaints.local"
           git add scripts/used_topics.json
           git diff --staged --quiet || (git commit -m "Track used topic" && git push)
@@ -61,7 +60,7 @@ jobs:
           if [ -z "$TARGET_CHAT" ]; then TARGET_CHAT="${{ secrets.TELEGRAM_CHAT_ID }}"; fi
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendVideo" \
             -F chat_id="$TARGET_CHAT" \
-            -F caption="Ø¬Ø§Ù‡Ø²! ÙÙŠØ¯ÙŠÙˆ Ø¬Ø¯ÙŠØ¯ Ù„Ù‚Ù†Ø§Ø© Ù…Ø­Ù„ Ø®ÙŠØ¨Ø± Ù„Ù„Ø¯Ù‡Ø§Ù†Ø§Øª (Ø§Ù„Ø±ÙŠØ§Ø¶)" \
+            -F caption="Ready! New video for Khyber Paints Riyadh" \
             -F video=@"out/final_telegram_video.mp4"
 
       - name: Notify Telegram on Failure
