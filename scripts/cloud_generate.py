@@ -1,7 +1,7 @@
-import os, sys, json, time, subprocess, urllib.request
+import os, sys, json, time, subprocess, urllib.request, urllib.parse
 
 prompt = sys.argv[1].strip() if len(sys.argv) > 1 and sys.argv[1].strip() else "نصائح اختيار الدهانات الأصلية لبيتك"
-print(f"Building video for prompt: {prompt}")
+print(f"Building scene-by-scene video for: {prompt}")
 
 os.makedirs("public/assets", exist_ok=True)
 os.makedirs("public/clips", exist_ok=True)
@@ -10,72 +10,67 @@ os.makedirs("public/sfx", exist_ok=True)
 os.makedirs("out", exist_ok=True)
 os.makedirs("/tmp/v_src", exist_ok=True)
 
-if not os.path.exists("public/sfx/impact.mp3"):
-    subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "sine=frequency=90:duration=0.35", "public/sfx/impact.mp3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-if not os.path.exists("public/sfx/whoosh.mp3"):
-    subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "anoisesrc=d=0.25:c=pink:r=44100:a=0.2", "public/sfx/whoosh.mp3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 if not os.path.exists("public/assets/shop_front.jpg"):
     subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=0x0F172A:s=1080x1344:d=1", "-frames:v", "1", "public/assets/shop_front.jpg"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-# Download royalty-free direct HD paint/color/interior videos from Wikimedia / Pexels CDN (no YouTube bot-block!)
-direct_sources = [
-    ("paint1", "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.720p.vp9.webm"),
+# 12 distinct real-world queries matched 1-to-1 with each voiceover scene
+scene_queries = [
+    ("story_01", "peeling paint wall",          "zoompan=z='min(zoom+0.0018,1.25)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_02", "water damage wall",           "zoompan=z='1.22-0.0012*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_03", "cracked wall paint",          "zoompan=z='min(zoom+0.0016,1.24)':x='on*1.2':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_05", "paint roller wall",           "zoompan=z='min(zoom+0.0018,1.25)':x='iw/2-(iw/zoom/2)':y='on*1.5':d=192:s=1080x1344:fps=60"),
+    ("story_06", "house painter wall",          "zoompan=z='1.24-0.0013*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_09", "paint color mixing",          "zoompan=z='min(zoom+0.0020,1.28)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_10", "luxury living room interior", "zoompan=z='min(zoom+0.0015,1.22)':x='on*1.4':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_13", "masking tape painting",       "zoompan=z='1.22-0.0012*on':x='iw/2-(iw/zoom/2)':y='on*1.3':d=192:s=1080x1344:fps=60"),
+    ("story_07", "modern bedroom interior",     "zoompan=z='min(zoom+0.0016,1.24)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_08", "modern villa facade",         "zoompan=z='min(zoom+0.0017,1.25)':x='on*1.1':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_11", "paint color swatches",        "zoompan=z='1.25-0.0013*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
+    ("story_14", "paint cans brushes",          "zoompan=z='min(zoom+0.0018,1.26)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=192:s=1080x1344:fps=60"),
 ]
 
-# Try Pexels/Pixabay direct public MP4s first, with guaranteed high-res animated paint/texture fallback
-pexels_urls = [
-    "https://videos.pexels.com/video-files/7578552/7578552-hd_1080_1920_30fps.mp4",
-    "https://videos.pexels.com/video-files/4763824/4763824-uhd_2560_1440_24fps.mp4",
-    "https://videos.pexels.com/video-files/6474343/6474343-hd_1080_1920_25fps.mp4",
-    "https://videos.pexels.com/video-files/5532774/5532774-hd_1080_1920_25fps.mp4",
-]
+used_urls = set()
 
-downloaded = []
-for idx, url in enumerate(pexels_urls, 1):
-    dest = f"/tmp/v_src/src_{idx}.mp4"
+for idx_s, (clip_name, query, zp) in enumerate(scene_queries):
+    img_path = f"/tmp/v_src/{clip_name}.jpg"
+    out_clip = f"public/clips/{clip_name}.mp4"
+    fetched = False
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=25) as resp, open(dest, "wb") as out_f:
-            out_f.write(resp.read())
-        if os.path.exists(dest) and os.path.getsize(dest) > 200000:
-            downloaded.append(dest)
-            print(f"Downloaded clip source {idx}")
+        api_url = (
+            "https://commons.wikimedia.org/w/api.php?action=query&generator=search"
+            f"&gsrsearch=filetype:bitmap+{urllib.parse.quote(query)}"
+            "&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url&iiurlwidth=1280&format=json"
+        )
+        req = urllib.request.Request(api_url, headers={"User-Agent": "KhyberVideoBot/1.0"})
+        data = json.loads(urllib.request.urlopen(req, timeout=15).read().decode())
+        pages = data.get("query", {}).get("pages", {})
+        for p in pages.values():
+            thumb = p.get("imageinfo", [{}])[0].get("thumburl")
+            if thumb and thumb not in used_urls:
+                req_img = urllib.request.Request(thumb, headers={"User-Agent": "KhyberVideoBot/1.0"})
+                with urllib.request.urlopen(req_img, timeout=15) as r_img, open(img_path, "wb") as f_img:
+                    f_img.write(r_img.read())
+                if os.path.exists(img_path) and os.path.getsize(img_path) > 15000:
+                    used_urls.add(thumb)
+                    fetched = True
+                    print(f"Fetched unique scene image for {clip_name}: {query}")
+                    break
     except Exception as e:
-        print(f"Source {idx} skipped: {e}")
+        print(f"Fallback for {clip_name}: {e}")
 
-# Build 16 crisp 1080x1344 60fps 3.2s clips (from downloaded videos OR rich fluid paint-swirl shaders if CDN blocks)
-c_idx = 1
-if downloaded:
-    for s_i in range(16):
-        src_mp4 = downloaded[s_i % len(downloaded)]
-        out_clip = f"public/clips/story_{c_idx:02d}.mp4"
-        dur = float(subprocess.check_output([
-            "ffprobe", "-v", "error", "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", src_mp4
-        ]).decode().strip())
-        ss = min((s_i * 2.1) % max(1.0, dur - 3.5), max(0.0, dur - 3.3))
+    if fetched:
         subprocess.run([
-            "ffmpeg", "-y", "-ss", f"{ss:.2f}", "-t", "3.2", "-i", src_mp4,
-            "-an", "-vf", "scale=1080:1344:force_original_aspect_ratio=increase,crop=1080:1344,eq=contrast=1.06:saturation=1.15,fps=60",
+            "ffmpeg", "-y", "-i", img_path,
+            "-vf", f"scale=1600:-2,{zp},eq=contrast=1.08:saturation=1.18",
+            "-t", "3.2", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", out_clip
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    else:
+        hue = idx_s * 30
+        subprocess.run([
+            "ffmpeg", "-y", "-f", "lavfi",
+            "-i", f"color=c=0x1E293B:s=1080x1344:d=3.2:r=60,hue=h={hue}",
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", out_clip
         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        c_idx += 1
-else:
-    # Guaranteed fallback: 16 distinct 60fps fluid paint-wave & architectural texture clips
-    palettes = [
-        "r='128+127*sin(2*PI*(X/400+T*0.7))':g='60+50*cos(2*PI*(Y/400-T*0.5))':b='60+40*sin(T)'",
-        "r='40+30*sin(T)':g='140+100*sin(2*PI*(X/350-T*0.6))':b='180+70*cos(2*PI*(Y/350+T*0.5))'",
-        "r='200+50*sin(2*PI*(Y/300+T*0.8))':g='150+80*cos(2*PI*(X/300-T*0.6))':b='50+40*sin(T)'",
-        "r='30+25*cos(T)':g='170+80*sin(2*PI*(X/320+T*0.7))':b='120+90*cos(2*PI*(Y/320-T*0.5))'",
-    ]
-    for s_i in range(16):
-        out_clip = f"public/clips/story_{c_idx:02d}.mp4"
-        geq = palettes[s_i % len(palettes)]
-        subprocess.run([
-            "ffmpeg", "-y", "-f", "lavfi", "-i", f"nullsrc=s=540x672:d=3.2:r=30,geq={geq},scale=1080:1344:flags=bicubic,fps=60",
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", out_clip
-        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        c_idx += 1
 
 SHOP_NAME = "\u0645\u062d\u0644 \u062e\u064a\u0628\u0631 \u0627\u0644\u062f\u0647\u0627\u0646\u0627\u062a"
 LOCATION  = "\u0627\u0644\u0631\u064a\u0627\u0636 \u2022 \u062d\u064a \u0627\u0644\u062e\u0644\u064a\u062c \u2022 \u0634\u0627\u0631\u0639 \u0627\u0644\u0623\u0645\u064a\u0631 \u0628\u0646\u062f\u0631 \u0628\u0646 \u0639\u0628\u062f\u0627\u0644\u0639\u0632\u064a\u0632 13223"
@@ -117,7 +112,6 @@ for i, (is_shop, vtype, clip_id, target_sec, accent, tag, head, pitch, rate, spo
         if r.returncode == 0 and os.path.exists(raw_mp3) and os.path.getsize(raw_mp3) > 1000:
             break
     else:
-        # Fallback silent-safe tone if edge-tts rate-limits
         subprocess.run(["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r=44100:cl=mono:d={target_sec-0.2}", final_mp3], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         frames = round(target_sec * 60)
         total_frames += frames
