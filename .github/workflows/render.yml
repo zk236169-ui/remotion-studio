@@ -6,7 +6,11 @@ on:
       prompt:
         description: 'Video prompt / hook topic'
         required: true
-        default: 'نصائح اختيار الدهانات الأصلية لبيتك'
+        default: 'كيف تختار دهان يعيش سنين بدون تقشير'
+      chat_id:
+        description: 'Telegram Chat ID to send video to'
+        required: false
+        default: ''
 
 jobs:
   render-and-send:
@@ -31,20 +35,27 @@ jobs:
       - name: Install Node packages
         run: npm install
 
-      - name: Generate Audio, Clips & Render 60fps Video
+      - name: Generate AI Script, Moving Clips & Render 60fps Video
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python3 scripts/cloud_generate.py "${{ github.event.inputs.prompt }}"
 
       - name: Send Finished Video Directly to Telegram
         if: success()
         run: |
+          TARGET_CHAT="${{ github.event.inputs.chat_id }}"
+          if [ -z "$TARGET_CHAT" ]; then TARGET_CHAT="${{ secrets.TELEGRAM_CHAT_ID }}"; fi
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendVideo" \
-            -F chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -F caption="Ready! Prompt: ${{ github.event.inputs.prompt }}" \
+            -F chat_id="$TARGET_CHAT" \
+            -F caption="جاهز! الموضوع: ${{ github.event.inputs.prompt }}" \
             -F video=@"out/final_telegram_video.mp4"
 
       - name: Notify Telegram on Failure
         if: failure()
         run: |
+          TARGET_CHAT="${{ github.event.inputs.chat_id }}"
+          if [ -z "$TARGET_CHAT" ]; then TARGET_CHAT="${{ secrets.TELEGRAM_CHAT_ID }}"; fi
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d chat_id="$TARGET_CHAT" \
             -d text="Render failed on GitHub. Check logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
