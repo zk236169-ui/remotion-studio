@@ -27,9 +27,10 @@ interface PaintScene {
 
 const WhiteboardSketch: React.FC<{
   scene: PaintScene;
+  sceneIndex: number;
   p: number;
   frame: number;
-}> = ({ scene, p, frame }) => {
+}> = ({ scene, sceneIndex, p, frame }) => {
   const {
     illustration,
     leftLabel = 'بدون برايمر ❌',
@@ -56,6 +57,7 @@ const WhiteboardSketch: React.FC<{
   const penX = interpolate(p, [0, 0.82], [140, 820], { extrapolateRight: 'clamp' });
   const penY = 300 + Math.sin(frame * 0.32) * 75;
   const showPen = p < 0.82;
+  const gridId = `paperGrid_${sceneIndex}`;
 
   const renderIllustration = () => {
     switch (illustration) {
@@ -190,11 +192,11 @@ const WhiteboardSketch: React.FC<{
     >
       <svg width="960" height="640" viewBox="0 0 960 640">
         <defs>
-          <pattern id="paperGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <pattern id={gridId} width="40" height="40" patternUnits="userSpaceOnUse">
             <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E2E8F0" strokeWidth="1.5" />
           </pattern>
         </defs>
-        <rect width="960" height="640" fill="url(#paperGrid)" />
+        <rect width="960" height="640" fill={`url(#${gridId})`} />
         {renderIllustration()}
         {showPen && (
           <g transform={`translate(${penX}, ${penY}) rotate(-28)`}>
@@ -240,7 +242,7 @@ const PaintWhiteboardSceneView: React.FC<{
           textAlign: 'center',
         }}
       >
-        <Audio src={staticFile(scene.audio)} />
+        {scene.audio ? <Audio src={staticFile(scene.audio)} /> : null}
         <div
           style={{
             transform: `scale(${pop})`,
@@ -315,7 +317,7 @@ const PaintWhiteboardSceneView: React.FC<{
         padding: '75px 50px 95px 50px',
       }}
     >
-      <Audio src={staticFile(scene.audio)} />
+      {scene.audio ? <Audio src={staticFile(scene.audio)} /> : null}
       <div style={{ textAlign: 'center', width: '100%', transform: `scale(${pop})` }}>
         <div
           style={{
@@ -336,7 +338,7 @@ const PaintWhiteboardSceneView: React.FC<{
         </div>
       </div>
 
-      <WhiteboardSketch scene={scene} p={p} frame={frame} />
+      <WhiteboardSketch scene={scene} sceneIndex={index} p={p} frame={frame} />
 
       <div
         style={{
