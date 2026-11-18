@@ -5,3 +5,13 @@ gemini_skills/
 public/clips/
 public/audio/
 .remotion/
+temp_remotion/
+temp_wb10/
+temp_zack/
+public/doc_audio/
+public/doc_clips/
+public/vec_audio/
+public/wb10_audio/
+public/wb_audio/
+public/wb_clips/
+out/
