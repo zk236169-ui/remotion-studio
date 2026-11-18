@@ -1,0 +1,42 @@
+name: Render Remotion Video to Telegram
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Video prompt / hook topic'
+        required: true
+        default: 'نصائح اختيار الدهانات الأصلية لبيتك'
+
+jobs:
+  render-and-send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Linux Chrome & FFmpeg dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libdbus-1-3 libatk1.0-0 libasound2t64 libxrandr2 libxkbcommon-dev libxfixes3 libxcomposite1 libxdamage1 libgbm1
+          pip install edge-tts yt-dlp
+
+      - name: Install Node packages
+        run: npm install
+
+      - name: Generate Audio, Clips & Render 60fps Video
+        run: python3 scripts/cloud_generate.py "${{ github.event.inputs.prompt }}"
+
+      - name: Send Finished Video Directly to Telegram
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendVideo" \
+            -F chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -F caption="Ready! Prompt: ${{ github.event.inputs.prompt }}" \
+            -F video=@"out/final_telegram_video.mp4"

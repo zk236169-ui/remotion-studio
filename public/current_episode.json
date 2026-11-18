@@ -1,0 +1,138 @@
+{
+  "shopName": "محل خيبر الدهانات",
+  "locationText": "الرياض • حي الخليج • شارع الأمير بندر بن عبدالعزيز 13223",
+  "whatsapp": "0599484068",
+  "totalFrames": 2520,
+  "beats": [
+    {
+      "isShopEnd": false,
+      "visualType": "peel_wall",
+      "clip": "clips/story_01.mp4",
+      "audio": "audio/story_beat_01.mp3",
+      "frames": 180,
+      "tag": "انتبه!",
+      "headline": "شوف كيف البوية تتقشر!",
+      "accent": "#EF4444"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "no_primer",
+      "clip": "clips/story_02.mp4",
+      "audio": "audio/story_beat_02.mp3",
+      "frames": 180,
+      "tag": "السبب؟",
+      "headline": "صبغ بدون برايمر!",
+      "accent": "#F59E0B"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "cheap_redo",
+      "clip": "clips/story_03.mp4",
+      "audio": "audio/story_beat_03.mp3",
+      "frames": 180,
+      "tag": "خسارة!",
+      "headline": "الرخيص يعيد الشغل مرتين!",
+      "accent": "#EF4444"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "primer_grip",
+      "clip": "clips/story_05.mp4",
+      "audio": "audio/story_beat_04.mp3",
+      "frames": 180,
+      "tag": "الحل الصح",
+      "headline": "برايمر قوي يمسك الجدار!",
+      "accent": "#10B981"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "roller_coat",
+      "clip": "clips/story_06.mp4",
+      "audio": "audio/story_beat_05.mp3",
+      "frames": 180,
+      "tag": "تغطية 100%",
+      "headline": "دهان أصلي من أول وجه!",
+      "accent": "#38BDF8"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "pc_mix",
+      "clip": "clips/story_09.mp4",
+      "audio": "audio/story_beat_06.mp3",
+      "frames": 180,
+      "tag": "بالكمبيوتر",
+      "headline": "نخلط لك نفس الدرجة!",
+      "accent": "#F59E0B"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "room_glow",
+      "clip": "clips/story_10.mp4",
+      "audio": "audio/story_beat_07.mp3",
+      "frames": 180,
+      "tag": "فخامة",
+      "headline": "ألوان تشرح الصدر!",
+      "accent": "#A855F7"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "tape_peel",
+      "clip": "clips/story_13.mp4",
+      "audio": "audio/story_beat_08.mp3",
+      "frames": 180,
+      "tag": "تشطيب فاخر",
+      "headline": "حواف نظيفة ترفع الراس!",
+      "accent": "#10B981"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "wash_stain",
+      "clip": "clips/story_07.mp4",
+      "audio": "audio/story_beat_09.mp3",
+      "frames": 180,
+      "tag": "للعوائل",
+      "headline": "قابل للغسيل والمسح!",
+      "accent": "#38BDF8"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "sun_shield",
+      "clip": "clips/story_08.mp4",
+      "audio": "audio/story_beat_10.mp3",
+      "frames": 180,
+      "tag": "حماية كاملة",
+      "headline": "عوازل تقاوم الشمس!",
+      "accent": "#F59E0B"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "free_calc",
+      "clip": "clips/story_11.mp4",
+      "audio": "audio/story_beat_11.mp3",
+      "frames": 180,
+      "tag": "وفّر فلوسك",
+      "headline": "نحسب الكمية مجاناً!",
+      "accent": "#10B981"
+    },
+    {
+      "isShopEnd": false,
+      "visualType": "brands_trio",
+      "clip": "clips/story_14.mp4",
+      "audio": "audio/story_beat_12.mp3",
+      "frames": 180,
+      "tag": "الأصلي عندنا",
+      "headline": "جوتن • 777 • ناشونال",
+      "accent": "#F59E0B"
+    },
+    {
+      "isShopEnd": true,
+      "visualType": "shop_pin",
+      "clip": "",
+      "audio": "audio/story_beat_13.mp3",
+      "frames": 360,
+      "tag": "زورونا اليوم!",
+      "headline": "محل خيبر الدهانات",
+      "accent": "#22C55E"
+    }
+  ]
+}

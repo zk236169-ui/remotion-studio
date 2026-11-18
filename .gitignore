@@ -1,0 +1,7 @@
+node_modules/
+out/
+reference_reels/
+gemini_skills/
+public/clips/
+public/audio/
+.remotion/
