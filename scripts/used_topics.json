@@ -1,1 +1,7 @@
-{"used_indices": [], "cycle": 1, "total_generated": 0}
+{
+  "used_indices": [
+    38
+  ],
+  "cycle": 1,
+  "total_generated": 1
+}
